@@ -1,26 +1,22 @@
 {
-  "name": "AUTO CLEAN 40",
-  "short_name": "AUTO CLEAN 40",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1a5fb4",
-  "icons": [
-    {
-      "src": "icon-180.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+    "name": "AUTO CLEAN 40 - Titanium",
+    "short_name": "AC40 Pro",
+    "description": "Gestion de Facturation Auto Clean 40",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#0a0a0a",
+    "theme_color": "#171717",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
 }
