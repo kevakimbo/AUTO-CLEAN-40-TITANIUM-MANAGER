@@ -1,0 +1,22 @@
+{
+    "name": "AUTO CLEAN 40 - Titanium",
+    "short_name": "AC40 Pro",
+    "description": "Gestion de Facturation Auto Clean 40",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#0a0a0a",
+    "theme_color": "#171717",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "https://via.placeholder.com/192x192.png?text=AC40",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "https://via.placeholder.com/512x512.png?text=AC40",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

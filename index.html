@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUTO CLEAN 40 - Titanium Manager</title>
+
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AUTO CLEAN 40">
+    <link rel="apple-touch-icon" href="https://via.placeholder.com/180x180.png?text=AC40">
+    <meta name="theme-color" content="#171717">
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="bg-radiant"></div>
+    <div class="app-layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="logo-placeholder">
+                    <i data-lucide="shield-check" style="width:24px; height:24px;"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>TITANIUM</h1>
+                    <span>MANAGER <span style="font-size:0.6em; opacity:0.5; text-transform:none; letter-spacing:0;">By
+                            KEV AKIMBO</span></span>
+                </div>
+            </div>
+
+            <div class="nav-menu">
+                <div class="nav-group">Général</div>
+                <button class="nav-item active" data-view="dashboard">
+                    <i data-lucide="layout-dashboard"></i> Tableau de bord
+                </button>
+                <button class="nav-item" data-view="editor">
+                    <i data-lucide="file-edit"></i> Facture & Devis
+                </button>
+                <button class="nav-item" data-view="history">
+                    <i data-lucide="history"></i> Historique
+                </button>
+
+                <div class="nav-group">Administration</div>
+                <button class="nav-item" data-view="settings">
+                    <i data-lucide="settings"></i> Configuration
+                </button>
+            </div>
+
+            <div class="user-profile">
+                <div class="avatar">AC</div>
+                <div class="user-info">
+                    <span class="name">Auto Clean 40</span>
+                    <span class="status">Compte Pro</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- MOBILE HEADER (Visible only on mobile) -->
+            <div class="mobile-header">
+                <i data-lucide="shield-check" style="color:var(--text-main);"></i>
+                <div class="mobile-brand-text">
+                    <span style="font-weight:700; letter-spacing:-0.5px;">TITANIUM</span>
+                    <span style="font-size:0.7em; opacity:0.7; margin-left:4px;">MANAGER <span style="opacity:0.5;">By
+                            KEV AKIMBO</span></span>
+                </div>
+            </div>
+
+            <header class="top-bar">
+                <div class="page-info">
+                    <h2 id="page-title">Tableau de bord</h2>
+                    <span id="current-date" class="date-badge">Chargement...</span>
+                </div>
+            </header>
+
+            <!-- DASHBOARD -->
+            <div id="view-dashboard" class="view active">
+                <div class="dashboard-grid">
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="label">Chiffre d'Affaires (Mois)</span>
+                                <i data-lucide="euro" class="icon-muted"></i>
+                            </div>
+                            <div class="stat-value" id="stat-revenue-month">0,00 €</div>
+                            <div class="stat-trend">Performance mensuelle</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="label">Documents Créés</span>
+                                <i data-lucide="file-text" class="icon-muted"></i>
+                            </div>
+                            <div class="stat-value" id="stat-docs-total">0</div>
+                            <div class="stat-trend">Factures & Devis</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="label">Panier Moyen</span>
+                                <i data-lucide="trending-up" class="icon-muted"></i>
+                            </div>
+                            <div class="stat-value" id="stat-avg-cart">0,00 €</div>
+                            <div class="stat-trend">Global</div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel chart-section">
+                        <h3>Évolution du Chiffre d'Affaires</h3>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel">
+                        <h3>Activités Récentes</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>N° Doc</th>
+                                    <th>Client</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                    <th style="text-align:right;">Montant</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-activities">
+                                <!-- JS Populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- EDITOR -->
+            <div id="view-editor" class="view">
+                <div class="editor-layout">
+                    <!-- Form Side -->
+                    <div class="editor-form">
+                        <div class="form-section">
+                            <h4><i data-lucide="file-plus"></i> Nouveau Document</h4>
+                            <div class="grid-2">
+                                <div class="input-group">
+                                    <label>Type de document</label>
+                                    <div style="display:flex; gap:10px;">
+                                        <button class="btn btn-secondary w-full"
+                                            onclick="app.newDocument('devis')">Devis</button>
+                                        <button class="btn btn-secondary w-full"
+                                            onclick="app.newDocument('facture')">Facture</button>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label>Date d'émission</label>
+                                    <input type="date" id="doc-date" class="input">
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>Numéro Officiel (Auto)</label>
+                                <input type="text" id="doc-number-auto" class="input" readonly
+                                    style="opacity: 0.7; cursor: not-allowed; font-weight:bold; background:rgba(255,255,255,0.05); color: #fff;">
+                            </div>
+                            <div class="input-group">
+                                <label>Numéro Personnalisé (Hors-Série)</label>
+                                <input type="text" id="doc-number-manual" class="input"
+                                    placeholder="Saisir pour forcer..." style="border-left: 3px solid var(--primary);">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h4><i data-lucide="user"></i> Client</h4>
+                            <div class="input-group">
+                                <input type="text" id="client-name" class="input" placeholder="Nom complet ou Société">
+                            </div>
+                            <div class="input-group">
+                                <textarea id="client-address" class="input" placeholder="Adresse complète"
+                                    style="min-height: 60px;"></textarea>
+                            </div>
+                            <div class="grid-2">
+                                <input type="email" id="client-email" class="input" placeholder="Email">
+                                <input type="text" id="client-phone" class="input" placeholder="Téléphone">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h4><i data-lucide="shopping-cart"></i> Services & Prestations</h4>
+
+                            <!-- Detailed Catalog Picker -->
+                            <div class="input-group">
+                                <label>Ajouter depuis le catalogue</label>
+                                <select id="catalog-select" class="input" onchange="app.addFromCatalog(this.value)">
+                                    <option value="">-- Choisir une prestation --</option>
+                                    <!-- JS populated -->
+                                </select>
+                            </div>
+
+                            <!-- Editor Headers -->
+                            <div
+                                style="display: grid; grid-template-columns: 2fr 0.5fr 0.8fr 0.8fr auto; gap: 0.5rem; margin-bottom: 0.5rem; padding: 0 0.5rem; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;">
+                                <div>Description</div>
+                                <div>Qté</div>
+                                <div>Prix U.</div>
+                                <div>Remise %</div>
+                                <div></div>
+                            </div>
+
+                            <div id="lines-container">
+                                <!-- Lines generated here -->
+                            </div>
+                            <button class="btn btn-secondary w-full" onclick="app.addLine()"
+                                style="margin-top: 1rem; border-style: dashed;">
+                                <i data-lucide="plus"></i> Ajouter une ligne vide
+                            </button>
+                        </div>
+
+                        <div style="height: 100px;"></div> <!-- Spacer -->
+                    </div>
+
+                    <!-- Preview Side -->
+                    <div class="editor-preview-container">
+                        <div class="paper-wrapper">
+                            <div id="pdf-preview" class="paper">
+                                <!-- Initial Preview Content -->
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <button class="btn btn-primary" onclick="app.saveDocument()">
+                                <i data-lucide="save"></i> Enregistrer & Archiver
+                            </button>
+                            <button class="btn btn-secondary" onclick="app.generatePDF()">
+                                <i data-lucide="download"></i> Télécharger PDF
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HISTORY -->
+            <div id="view-history" class="view">
+                <div class="glass-panel">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                        <h3>Historique des Documents</h3>
+                        <div class="search-box">
+                            <input type="text" placeholder="Rechercher..." onkeyup="app.filterHistory(this.value)">
+                            <i data-lucide="search"></i>
+                        </div>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Numéro</th>
+                                <th>Client</th>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th style="text-align:right;">Montant TTC</th>
+                                <th style="text-align:right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-list">
+                            <!-- JS Populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SETTINGS -->
+            <div id="view-settings" class="view">
+                <div class="grid-2" style="max-width: 1200px; margin: 0 auto; gap: 2rem; align-items: start;">
+
+                    <div class="glass-panel">
+                        <h3
+                            style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                            Identité Visuelle & Logo</h3>
+                        <div class="input-group"
+                            style="text-align: center; border: 1px dashed var(--border); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                            <img id="conf-logo-preview" src="" alt="Aperçu du logo"
+                                style="max-height: 80px; margin-bottom: 1rem; display: none; margin-left: auto; margin-right: auto;">
+                            <label for="conf-logo-upload" class="btn btn-secondary" style="cursor: pointer;">
+                                <i data-lucide="upload"></i> Choisir un logo (Image)
+                            </label>
+                            <input type="file" id="conf-logo-upload" accept="image/*" style="display: none;"
+                                onchange="app.handleLogoUpload(this)">
+                            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Recommandé :
+                                PNG transparent ou JPG haute qualité.</p>
+                        </div>
+
+                        <h3
+                            style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                            Compteurs & Numérotation</h3>
+                        <div class="grid-2" style="margin-bottom: 2rem;">
+                            <div class="input-group">
+                                <label>Dernière Facture N°</label>
+                                <input type="number" id="conf-counter-facture" class="input">
+                            </div>
+                            <div class="input-group">
+                                <label>Dernier Devis N°</label>
+                                <input type="number" id="conf-counter-devis" class="input">
+                            </div>
+                        </div>
+
+                        <h3
+                            style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                            Informations Légales</h3>
+                        <div class="input-group">
+                            <label>Nom de l'entreprise</label>
+                            <input type="text" id="conf-company" class="input">
+                        </div>
+                        <div class="grid-2">
+                            <div class="input-group">
+                                <label>SIRET</label>
+                                <input type="text" id="conf-siret" class="input">
+                            </div>
+                            <div class="input-group">
+                                <label>Téléphone</label>
+                                <input type="text" id="conf-phone" class="input">
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="input-group">
+                                <label>Email</label>
+                                <input type="text" id="conf-email" class="input">
+                            </div>
+                            <div class="input-group">
+                                <label>Site Web</label>
+                                <input type="text" id="conf-website" class="input">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Adresse du Siège</label>
+                            <textarea id="conf-address" class="input"></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label>Mentions Pied de page (Défaut : Auto-Entrepreneur)</label>
+                            <textarea id="conf-legal" class="input" placeholder="TVA non applicable..."
+                                style="min-height: 80px;"></textarea>
+                        </div>
+                        <button class="btn btn-primary w-full" onclick="app.saveSettings()">Enregistrer les
+                            modifications</button>
+                    </div>
+
+                    <!-- Config Right: CATALOG MANAGER -->
+                    <div class="glass-panel">
+                        <h3
+                            style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem;">
+                            Catalogue des Prestations</h3>
+
+                        <!-- Add New Service -->
+                        <div
+                            style="background: rgba(255,255,255,0.03); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <h4 id="catalog-form-title"
+                                style="font-size: 0.8rem; text-transform:uppercase; color: var(--text-muted); margin-bottom: 1rem;">
+                                Ajouter une prestation</h4>
+                            <div class="input-group">
+                                <input type="text" id="new-service-name" class="input"
+                                    placeholder="Nom de la prestation (ex: Nettoyage Complet)">
+                            </div>
+                            <div class="input-group">
+                                <textarea id="new-service-desc" class="input"
+                                    placeholder="Détails techniques (ex: Aspiration, Shampoing...)"
+                                    style="min-height: 60px;"></textarea>
+                            </div>
+                            <div class="grid-2">
+                                <input type="number" id="new-service-price" class="input" placeholder="Prix (€)">
+                                <button id="btn-add-service" class="btn btn-secondary"
+                                    onclick="app.addServiceToCatalog()">Ajouter au
+                                    catalogue</button>
+                            </div>
+                        </div>
+
+                        <!-- List -->
+                        <div style="max-height: 400px; overflow-y: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th style="text-align:right;">Prix</th>
+                                        <th style="text-align:right;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="catalog-list-body">
+                                    <!-- JS Populated -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
